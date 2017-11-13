@@ -16,6 +16,22 @@ namespace TimeTracker.Controllers.API
     {
         private ToDoOrestContext db = new ToDoOrestContext();
 
+        //[ResponseType(typeof(ToDo))]
+        [Route("api/GetUnfinishedToDos")]
+        public List<ToDo> GetUnfinishedToDos()
+        {
+
+            var unfinished = db.ToDoes.Where(p => p.IsCompleted == false).OrderByDescending(p => p.Priority).ToList();
+
+            return unfinished;
+        }
+        [Route("api/GetFinishedToDos")]
+        public List<ToDo> GetSortedFinishedTodos()
+        {
+            var finished = db.ToDoes.Where(p => p.IsCompleted == true).OrderBy(p => p.EndDate).ToList();
+            return finished;
+        }
+
         // GET: api/ToDoes
         public IQueryable<ToDo> GetToDoes()
         {
@@ -35,6 +51,7 @@ namespace TimeTracker.Controllers.API
 
             return Ok(toDo);
         }
+
 
         // PUT: api/ToDoes/5
         [ResponseType(typeof(void))]
@@ -115,5 +132,7 @@ namespace TimeTracker.Controllers.API
         {
             return db.ToDoes.Count(e => e.Id == id) > 0;
         }
+
+
     }
 }
